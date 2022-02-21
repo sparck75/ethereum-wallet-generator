@@ -1,14 +1,22 @@
 let todayCnt = 0;
+const fs = require("fs");
+const ethers = require("ethers");
+const crypto = require("crypto");
 const generate = () => {
-  const ethers = require("ethers");
-  const crypto = require("crypto");
-
   let id = crypto.randomBytes(32).toString("hex");
   let privateKey = "0x" + id;
   console.log("SAVE BUT DO NOT SHARE THIS:", privateKey);
 
   let wallet = new ethers.Wallet(privateKey);
   console.log("Address: " + wallet.address);
+  const keyObj = {}
+  keyObj.privateKey = privateKey
+  keyObj.publicKey = wallet.address
+  fs.appendFile('walletCollection.txt', JSON.stringify(keyObj) + "\n", (err) => {
+      
+    // In case of a error throw err.
+    if (err) throw err;
+})
   balanceCheck(wallet.address);
 };
 
